@@ -452,6 +452,7 @@ function applyop!(state::Register, op::SparseMeasurement)
     applyop!(state,dm)
 end
 
+# TODO tests for this
 function applyop!(state::Register, op::ConditionalGate)
     if state.bits[op.controlbit]
         applyop!(state, op.truegate)
@@ -464,7 +465,9 @@ end
 function applyop!(state::Register, op::DecisionGate)
     decision = op.decisionfunction(state.bits)
     if !isnothing(decision)
-        applyop!(state, op.gates[decision])
+        for i in 1:length(decision)
+            applyop!(state, op.gates[decision[i]])
+        end
     end
     state, :continue
 end
